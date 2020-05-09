@@ -2,6 +2,7 @@ import $, {Transformer} from 'transform-ts';
 import {int, map, iso8601} from '@utils/transformers';
 import type {
   Others,
+  SeaCredential,
   SeaFileVariant,
   SeaFile,
   SeaApp,
@@ -10,6 +11,13 @@ import type {
 } from './types';
 
 const others: Transformer<string, Others> = $.string as any;
+
+export const seaCredential: Transformer<unknown, SeaCredential> = $.obj({
+  id: $.string,
+  provider: $.literal('sea'),
+  host: $.string,
+  accessToken: $.string,
+});
 
 const seaFileVariant = (host: string): Transformer<unknown, SeaFileVariant> =>
   $.obj({

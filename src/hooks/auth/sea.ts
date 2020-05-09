@@ -9,7 +9,7 @@ import {config} from '@constants';
 import {uuidv4} from '@utils/uuidv4';
 import {SeaCredential} from '@models/sea';
 
-const SEA_AUTH_STATE_KEY = '@auth_state';
+const SEA_AUTH_STATE_KEY = '@sea_auth_state';
 
 const seaAuthStateTransformer = $.obj({
   provider: $.literal('sea'),

@@ -6,4 +6,4 @@ export type {
   SeaUser,
   SeaPost,
 } from './types';
-export {seaFile, seaPost, seaUser} from './transformers';
+export {seaCredential, seaFile, seaPost, seaUser} from './transformers';

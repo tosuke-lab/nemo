@@ -5,9 +5,10 @@ import type {
 } from '@react-navigation/native';
 import {NavigationContainer, useLinking} from '@react-navigation/native';
 import {Stack} from './navigators';
-import {HomeScreen} from './screens/HomeScreen';
+import {MainScreen} from './screens/MainScreen';
 import {AuthScreen} from './screens/AuthScreen';
 import {CallbackScreen} from './screens/CallbackScreen';
+import {useAuthState} from '@hooks/auth';
 
 export const NavigationRoot = () => {
   const [initialState, setInitialState] = useState<InitialState | undefined>();
@@ -23,7 +24,7 @@ export const NavigationRoot = () => {
 
   useEffect(() => {
     Promise.race([
-      getInitialState(),
+      Promise.resolve(getInitialState()),
       new Promise<void>((r) => window.setTimeout(r, 150)),
     ] as const)
       .catch((e) => {
@@ -38,10 +39,13 @@ export const NavigationRoot = () => {
       });
   }, [getInitialState]);
 
+  const [authState] = useAuthState();
+  const hasCredential = authState.credentials.length > 0;
+
   return !loadingState ? (
     <NavigationContainer ref={ref} initialState={initialState}>
-      <Stack.Navigator initialRouteName="Auth">
-        {HomeScreen}
+      <Stack.Navigator initialRouteName={hasCredential ? 'Main' : 'Auth'}>
+        {MainScreen}
         {AuthScreen}
         {CallbackScreen}
       </Stack.Navigator>

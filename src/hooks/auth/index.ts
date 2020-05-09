@@ -1,16 +1,25 @@
-import React, {useReducer, Reducer, useContext, useMemo} from 'react';
+import React, {
+  useReducer,
+  Reducer,
+  useContext,
+  useMemo,
+  useEffect,
+} from 'react';
 import type {Credential} from '@models/type';
+import {Resource} from '@models/resource';
 import type {SeaCredential} from '@models/sea';
+import type {AuthState} from './types';
+import {setAuthState, getAuthState} from './store';
 
-type AuthState = {
-  defaultId?: string;
-  credentials: Credential[];
-};
-
-type AuthStateActions = {
-  type: 'add';
-  credential: Credential;
-};
+type AuthStateActions =
+  | {
+      type: 'add';
+      credential: Credential;
+    }
+  | {
+      type: 'remove';
+      id: string;
+    };
 
 const authStateReducer: Reducer<AuthState, AuthStateActions> = (
   prev,
@@ -23,12 +32,22 @@ const authStateReducer: Reducer<AuthState, AuthStateActions> = (
         defaultId: prev.defaultId ?? action.credential.id,
         credentials: [...prev.credentials, action.credential],
       };
+    case 'remove':
+      const newCredentials = prev.credentials.filter((c) => c.id !== action.id);
+      return {
+        ...prev,
+        defaultId:
+          prev.defaultId === action.id ? newCredentials[0]?.id : prev.defaultId,
+        credentials: newCredentials,
+      };
     default:
       /* eslint-disable-next-line */
-      const _exhausiveCheck: never = action.type;
+      const _exhausiveCheck: never = action;
       throw 'unreachable';
   }
 };
+
+export const useInitialAuthStateResource = () => new Resource(getAuthState());
 
 const AuthStateContext = React.createContext<
   [AuthState, React.Dispatch<AuthStateActions>]
@@ -39,10 +58,19 @@ const AuthStateContext = React.createContext<
   },
 ]);
 
-type AuthStateProviderProps = React.PropsWithChildren<{}>;
+type AuthStateProviderProps = React.PropsWithChildren<{
+  initialStateResource: Resource<AuthState | undefined>;
+}>;
 
-export const AuthStateProvider = ({children}: AuthStateProviderProps) => {
-  const [authState, dispatch] = useReducer(authStateReducer, {credentials: []});
+export const AuthStateProvider = ({
+  initialStateResource,
+  children,
+}: AuthStateProviderProps) => {
+  const initialState = initialStateResource.read() ?? {credentials: []};
+  const [authState, dispatch] = useReducer(authStateReducer, initialState);
+  useEffect(() => {
+    setAuthState(authState);
+  }, [authState]);
   return React.createElement(
     AuthStateContext.Provider,
     {value: [authState, dispatch]},
