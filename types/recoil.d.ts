@@ -64,8 +64,6 @@ declare module 'recoil' {
   export function useSetRecoilState<T>(state: RecoilState<T>): SetOrUpdate<T>;
   export function useResetRecoilState<T>(state: RecoilState<T>): () => void;
 
-  // cannot use `useRecoilCallback` in ReactNative
-  /*
   type CallbackOperations = Readonly<{
     getPromise: <T>(value: RecoilValue<T>) => Promise<T>;
     getLoadable: <T>(value: RecoilValue<T>) => Loadable<T>;
@@ -76,5 +74,4 @@ declare module 'recoil' {
     f: (ops: CallbackOperations, ...args: Args) => Return,
     deps?: unknown[],
   ): (...args: Args) => Return;
-  */
 }

@@ -1,11 +1,11 @@
-import React, {useContext, useCallback} from 'react';
+import React, {useContext} from 'react';
 import {
   atom,
   selector,
   DefaultValue,
   useRecoilValue,
   RecoilValue,
-  useSetRecoilState,
+  useRecoilCallback,
 } from 'recoil';
 import {memoize} from 'lodash-es';
 import type {Credential} from '@models/type';
@@ -58,19 +58,18 @@ export const useAuthState = () => {
   return useRecoilValue(authState);
 };
 export const useAuthStateOperations = () => {
-  const set = useSetRecoilState(authState);
-  const addCredential = useCallback(
-    (credential: Credential) =>
-      set((prev) => ({
+  const addCredential = useRecoilCallback(
+    ({set}, credential: Credential) =>
+      set(authState, (prev) => ({
         ...prev,
         defaultId: prev.defaultId ?? credential.id,
         credentials: [...prev.credentials, credential],
       })),
-    [set],
+    [],
   );
-  const removeCredential = useCallback(
-    (id: string) =>
-      set((prev) => {
+  const removeCredential = useRecoilCallback(
+    ({set}, id: string) =>
+      set(authState, (prev) => {
         const newCredentials = prev.credentials.filter((c) => c.id !== id);
         return {
           ...prev,
@@ -79,7 +78,7 @@ export const useAuthStateOperations = () => {
           credentials: newCredentials,
         };
       }),
-    [set],
+    [],
   );
   return {
     addCredential,
