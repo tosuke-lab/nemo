@@ -10,6 +10,8 @@ module.exports = {
           '@models': './src/models',
           '@utils': './src/utils',
           '@constants': './src/constants',
+          'react-dom': './src/react-dom',
+          recoil: '@tosuke/recoil/dist/recoil.development',
         },
       },
     ],
