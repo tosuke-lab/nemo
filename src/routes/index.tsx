@@ -39,7 +39,7 @@ export const NavigationRoot = () => {
       });
   }, [getInitialState]);
 
-  const [authState] = useAuthState();
+  const authState = useAuthState();
   const hasCredential = authState.credentials.length > 0;
 
   return !loadingState ? (

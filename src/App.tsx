@@ -1,22 +1,21 @@
 import 'react-native-gesture-handler';
 import {enableScreens} from 'react-native-screens';
 import React, {Suspense} from 'react';
+import {RecoilRoot} from 'recoil';
 import {ThemeProvier} from '@components/theme';
 import {NavigationRoot} from './routes';
-import {AuthStateProvider, useInitialAuthStateResource} from '@hooks/auth';
 
 enableScreens();
 
 const App = () => {
-  const initialAuthStateResource = useInitialAuthStateResource();
   return (
-    <Suspense fallback={null}>
-      <ThemeProvier>
-        <AuthStateProvider initialStateResource={initialAuthStateResource}>
+    <RecoilRoot>
+      <Suspense fallback={null}>
+        <ThemeProvier>
           <NavigationRoot />
-        </AuthStateProvider>
-      </ThemeProvier>
-    </Suspense>
+        </ThemeProvier>
+      </Suspense>
+    </RecoilRoot>
   );
 };
 

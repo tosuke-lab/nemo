@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {Alert} from 'react-native';
 import {Box, ActivityIndicator} from '@components/ui';
-import {useAuthState} from '@hooks/auth';
+import {useAuthStateOperations} from '@hooks/auth';
 import {useAuthCallback} from '@hooks/auth/sea';
 
 type CallbackProps = {
@@ -12,7 +12,7 @@ type CallbackProps = {
 };
 
 export const Callback = (props: CallbackProps) => {
-  const [, dispatch] = useAuthState();
+  const {addCredential} = useAuthStateOperations();
   const {processCallback} = useAuthCallback();
 
   useEffect(() => {
@@ -20,10 +20,7 @@ export const Callback = (props: CallbackProps) => {
       state: props.state,
       code: props.code,
       onSuccess: (credential) => {
-        dispatch({
-          type: 'add',
-          credential,
-        });
+        addCredential(credential);
         console.log(credential);
         props.goNext();
       },
@@ -39,7 +36,7 @@ export const Callback = (props: CallbackProps) => {
         props.goBack();
       },
     });
-  }, [props, processCallback, dispatch]);
+  }, [props, processCallback, addCredential]);
 
   return (
     <Box flex={1} justifyContent="center" alignItems="center">

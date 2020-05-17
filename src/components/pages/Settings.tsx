@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   TouchableNativeFeedback,
 } from 'react-native';
-import {useAuthState} from '@hooks/auth';
+import {useAuthState, useAuthStateOperations} from '@hooks/auth';
 
 type DialogProps = React.PropsWithChildren<{
   visible: boolean;
@@ -56,14 +56,12 @@ export const Settings = ({navigateToAuthScreen}: SettingsProps) => {
   const openLogoutDialog = useCallback(() => setLogoutDialogVisible(true), []);
   const cancelLogout = useCallback(() => setLogoutDialogVisible(false), []);
 
-  const [state, dispatch] = useAuthState();
+  const state = useAuthState();
+  const {removeCredential} = useAuthStateOperations();
   const logout = useCallback(() => {
-    dispatch({
-      type: 'remove',
-      id: state.defaultId!,
-    });
+    removeCredential(state.defaultId!);
     navigateToAuthScreen();
-  }, [state, dispatch, navigateToAuthScreen]);
+  }, [state, removeCredential, navigateToAuthScreen]);
 
   return (
     <ScrollView>
