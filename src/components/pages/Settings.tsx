@@ -53,6 +53,7 @@ type SettingsProps = {
 
 export const Settings = ({navigateToAuthScreen}: SettingsProps) => {
   const [logoutDialogVisible, setLogoutDialogVisible] = useState(false);
+  const openLogoutDialog = useCallback(() => setLogoutDialogVisible(true), []);
   const cancelLogout = useCallback(() => setLogoutDialogVisible(false), []);
 
   const [state, dispatch] = useAuthState();
@@ -74,13 +75,13 @@ export const Settings = ({navigateToAuthScreen}: SettingsProps) => {
           fontWeight="bold">
           アカウント設定
         </Text>
-        <RectButton onPress={() => setLogoutDialogVisible(true)}>
+        <RectButton onPress={openLogoutDialog}>
           <Box
             accessible
             paddingHorizontal="md"
             minHeight={48}
             justifyContent="center">
-            <Text variant="body" color="red600" fontWeight="bold">
+            <Text variant="body" color="danger" fontWeight="bold">
               ログアウト
             </Text>
           </Box>
@@ -113,7 +114,7 @@ export const Settings = ({navigateToAuthScreen}: SettingsProps) => {
                 minHeight={48}
                 paddingHorizontal="xs"
                 justifyContent="center">
-                <Text variant="caption" color="red600">
+                <Text variant="caption" color="danger">
                   ログアウト
                 </Text>
               </Box>

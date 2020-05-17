@@ -110,6 +110,7 @@ const colors = {
   foreground: palette.black,
   caption: palette.gray700,
   primary: palette.blue600,
+  danger: palette.red600,
   border: palette.gray700,
 };
 
